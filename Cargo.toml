@@ -1,0 +1,13 @@
+[package]
+name = "rust-hashring"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+crc32fast = "1.4.2"
+rand = "0.9.1"
+
+[dependencies.uuid]
+version = "1.17.0"
+# Lets you generate random UUIDs
+features = ["v4"]
