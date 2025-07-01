@@ -51,16 +51,15 @@ impl HashRing {
         self.physical_nodes.push(server_id);
         self.generate_virtual_nodes(server_id);
         self.virtual_nodes.sort();
-        server_id 
+        server_id
     }
 
     fn remove_server(&mut self, server_id: u32) {
         print!("removing server...{}\n", server_id);
-        self.physical_nodes = self.physical_nodes
+        self.physical_nodes = self
+            .physical_nodes
             .iter()
-            .filter(|x| {
-                *x != &server_id
-            })
+            .filter(|x| *x != &server_id)
             .cloned()
             .collect();
         self.remove_virtual_nodes(server_id);
@@ -116,9 +115,13 @@ impl HashRing {
 
     fn pick_server_on_ring(&mut self, data: &[u8]) -> u32 {
         let key_hash = self.create_hash(data);
-        let vnode_id = self.virtual_nodes[binary_search_next_greatest(&self.virtual_nodes, key_hash)];
+        let vnode_id =
+            self.virtual_nodes[binary_search_next_greatest(&self.virtual_nodes, key_hash)];
         let server_id = self.virtual_to_physical[&vnode_id];
-        self.server_counter.entry(server_id).and_modify(|i| *i += 1).or_insert(1);
+        self.server_counter
+            .entry(server_id)
+            .and_modify(|i| *i += 1)
+            .or_insert(1);
         server_id
     }
 
@@ -140,7 +143,7 @@ impl HashRing {
 
 /**
  * A simple binary search variant.
- */ 
+ */
 fn binary_search_next_greatest(arr: &Vec<u32>, key: u32) -> usize {
     let mut left = 0;
     let mut right = arr.len() - 1;
@@ -195,7 +198,7 @@ fn main() {
         h.pick_server_on_ring(&d);
     }
     h.show_dist();
-    
+
     // remove the server we just added
     // since data is exactly the same + vnode positions and key hashes are deterministic,
     // we will revert to the original distribution.
@@ -205,5 +208,4 @@ fn main() {
         h.pick_server_on_ring(&d);
     }
     h.show_dist();
-    
 }
