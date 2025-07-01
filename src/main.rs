@@ -139,12 +139,12 @@ impl HashRing {
 }
 
 /**
- * A simple binary search implementation
+ * A simple binary search variant.
  */ 
 fn binary_search_next_greatest(arr: &Vec<u32>, key: u32) -> usize {
     let mut left = 0;
     let mut right = arr.len() - 1;
-    if u32::from(key) >= arr[right] {
+    if key >= arr[right] {
         return 0;
     }
     let mut mid;
